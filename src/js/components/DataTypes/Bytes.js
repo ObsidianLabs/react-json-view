@@ -12,6 +12,7 @@ export default class extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            format: props.value.utf8 ? 'utf8' : 'hex',
             collapsed: AttributeStore.get(
                 props.rjvId,
                 props.namespace,
@@ -19,6 +20,10 @@ export default class extends React.PureComponent {
                 true
             )
         };
+    }
+
+    toggleFormat = () => {
+      this.setState({ format: this.state.format === 'hex' ? 'utf8' : 'hex' })
     }
 
     toggleCollapsed = () => {
@@ -38,15 +43,17 @@ export default class extends React.PureComponent {
     };
 
     render() {
-        const { collapsed } = this.state;
+        const { format, collapsed } = this.state;
         const { props } = this;
-        const { type, collapseStringsAfterLength, theme } = props;
-        const type_name = type || 'string';
-        let { value } = props;
+        const type_name = props.type;
+        const { collapseStringsAfterLength, theme } = props;
+        let value = props.value[format];
         let collapsible = toType(collapseStringsAfterLength) === 'integer';
         let style = { style: { cursor: 'default' } };
 
-        if (collapsible && value.length > collapseStringsAfterLength) {
+        if (typeof value === 'undefined') {
+            value = <span className='badge badge-danger'>Invalid utf8</span>
+        } else if (collapsible && value.length > collapseStringsAfterLength) {
             style.style.cursor = 'pointer';
             if (this.state.collapsed) {
                 value = (
@@ -59,7 +66,7 @@ export default class extends React.PureComponent {
         }
 
         return (
-            <div {...Theme(theme, 'string')}>
+            <div {...Theme(theme, format === 'utf8' ? 'string' : 'hex')}>
                 <span
                     class="string-value"
                     {...style}
@@ -67,7 +74,13 @@ export default class extends React.PureComponent {
                 >
                     "{value}"
                 </span>
-                <DataTypeLabel type_name={type_name} {...props} />
+                <span
+                    class="badge bg-secondary cursor-pointer data-type-label"
+                    {...Theme(theme, 'data-type-label')}
+                    onClick={this.toggleFormat}
+                >
+                    {type_name}|{format}
+                </span>
             </div>
         );
     }

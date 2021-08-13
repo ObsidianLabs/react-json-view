@@ -62,16 +62,6 @@ export default class extends React.PureComponent {
 
     getClippyIcon = () => {
         const { theme } = this.props;
-
-        if (this.state.copied) {
-            return (
-                <span>
-                    <Clippy class="copy-icon" {...Theme(theme, 'copy-icon')} />
-                    <span {...Theme(theme, 'copy-icon-copied')}>✔</span>
-                </span>
-            );
-        }
-
         return <Clippy class="copy-icon" {...Theme(theme, 'copy-icon')} />;
     };
 

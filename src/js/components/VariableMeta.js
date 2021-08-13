@@ -10,13 +10,33 @@ import { RemoveCircle as Remove, AddCircle as Add } from './icons';
 //theme
 import Theme from './../themes/getStyle';
 
+export class ObjectSize extends React.PureComponent {
+    render () {
+        const { size, type, parent_type, theme, displayObjectSize } = this.props;
+        if (displayObjectSize) {
+            let typeName
+            if (parent_type) {
+                typeName = type === 'array' ? 'item' : 'field'
+            } else {
+                typeName = 'return'
+            }
+            
+            return (
+                <span class="object-size" {...Theme(theme, 'object-size')}>
+                    {size} {typeName}{size === 1 ? '' : 's'}
+                </span>
+            );
+        }
+    }
+}
+
 export default class extends React.PureComponent {
     getObjectSize = () => {
         const { size, theme, displayObjectSize } = this.props;
         if (displayObjectSize) {
             return (
                 <span class="object-size" {...Theme(theme, 'object-size')}>
-                    {size} item{size === 1 ? '' : 's'}
+                    {size} {type === 'array' ? 'item' : 'field'}{size === 1 ? '' : 's'}
                 </span>
             );
         }

@@ -86,7 +86,7 @@ export default class extends React.PureComponent {
                         })}
                     >
                         <span {...Theme(theme, 'brace-row')}>
-                            <div
+                            {/* <div
                                 class="icon-container"
                                 {...Theme(theme, 'icon-container')}
                                 onClick={e => {
@@ -94,7 +94,7 @@ export default class extends React.PureComponent {
                                 }}
                             >
                                 {this.getExpandedIcon(i)}
-                            </div>
+                            </div> */}
                             {this.state.expanded[i] ? (
                                 <ObjectComponent
                                     key={name + i}

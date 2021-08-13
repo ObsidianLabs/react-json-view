@@ -18,6 +18,7 @@ import {
     JsonNull,
     JsonRegexp,
     JsonString,
+    JsonBytes,
     JsonUndefined
 } from './DataTypes/DataTypes';
 
@@ -219,6 +220,16 @@ class VariableEditor extends React.PureComponent {
     getValue = (variable, editMode) => {
         const type = editMode ? false : variable.type;
         const { props } = this;
+        if (type === 'bool') {
+            return <JsonBoolean value={variable.value} {...props} />
+        } else if (type.startsWith('int') || type.startsWith('uint')) {
+            return <JsonInteger value={variable.value} {...props} type={type} />;
+        } else if (type === 'string' || type === 'address' || type === 'FixedHash<20>') {
+            return <JsonString value={variable.value} {...props} type={type} />;
+        } else if (type === 'byte' || type.startsWith('bytes')) {
+            return <JsonBytes value={variable.value} {...props} type={type} />;
+        }
+
         switch (type) {
             case false:
                 return this.getEditInput();

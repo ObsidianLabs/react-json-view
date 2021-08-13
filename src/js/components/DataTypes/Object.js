@@ -6,7 +6,9 @@ import { toType } from './../../helpers/util';
 import { JsonObject } from './DataTypes';
 
 import VariableEditor from './../VariableEditor';
-import VariableMeta from './../VariableMeta';
+import { ObjectSize } from './../VariableMeta';
+import CopyToClipboard from './../CopyToClipboard';
+
 import ArrayGroup from './../ArrayGroup';
 import ObjectName from './../ObjectName';
 
@@ -110,7 +112,7 @@ class RjvObject extends React.PureComponent {
         );
     };
 
-    getEllipsis = () => {
+    getEllipsis = text => {
         const { size } = this.state;
 
         if (size === 0) {
@@ -120,21 +122,41 @@ class RjvObject extends React.PureComponent {
             return (
                 <div
                     {...Theme(this.props.theme, 'ellipsis')}
-                    class="node-ellipsis"
+                    class="node-ellipsis mouse-cursor"
+                    key="collapsed"
                     onClick={this.toggleCollapsed}
                 >
-                    ...
+                    {text}
                 </div>
             );
         }
     };
 
-    getObjectMetaData = src => {
-        const { rjvId, theme } = this.props;
-        const { size, hovered } = this.state;
+    getObjectSize = () => {
+        const { size } = this.state;
         return (
-            <VariableMeta rowHovered={hovered} size={size} {...this.props} />
+            <ObjectSize size={size} {...this.props} />
         );
+    };
+
+    getCopyToClipboard = () => {
+        const { enableClipboard, src, theme, namespace } = this.props;
+        const { hovered } = this.state;
+        return (
+            <div
+                {...Theme(theme, 'object-meta-data')}
+                class="object-meta-data"
+                onClick={e => {
+                    e.stopPropagation();
+                }}
+            >
+                <CopyToClipboard
+                    rowHovered={hovered}
+                    clickCallback={enableClipboard}
+                    {...{ src, theme, namespace }}
+                />
+            </div>
+        )
     };
 
     getBraceStart(object_type, expanded) {
@@ -146,7 +168,7 @@ class RjvObject extends React.PureComponent {
                     <span {...Theme(theme, 'brace')}>
                         {object_type === 'array' ? '[' : '{'}
                     </span>
-                    {expanded ? this.getObjectMetaData(src) : null}
+                    {expanded ? this.getObjectSize() : null}
                 </span>
             );
         }
@@ -161,18 +183,18 @@ class RjvObject extends React.PureComponent {
                     }}
                     {...Theme(theme, 'brace-row')}
                 >
-                    <div
+                    {/* <div
                         class="icon-container"
                         {...Theme(theme, 'icon-container')}
                     >
                         <IconComponent {...{ theme, iconStyle }} />
-                    </div>
+                    </div> */}
                     <ObjectName {...this.props} />
                     <span {...Theme(theme, 'brace')}>
-                        {object_type === 'array' ? '[' : '{'}
+                        {parent_type ? object_type === 'array' ? '[' : '{' : '('}
                     </span>
                 </span>
-                {expanded ? this.getObjectMetaData(src) : null}
+                {expanded ? this.getObjectSize() : null}
             </span>
         );
     }
@@ -186,6 +208,7 @@ class RjvObject extends React.PureComponent {
             namespace,
             name,
             type,
+            internal_type,
             parent_type,
             theme,
             jsvRoot,
@@ -221,7 +244,7 @@ class RjvObject extends React.PureComponent {
                           iconStyle,
                           ...rest
                       })
-                    : this.getEllipsis()}
+                    : this.getEllipsis(this.getObjectSize())}
                 <span class="brace-row">
                     <span
                         style={{
@@ -229,15 +252,21 @@ class RjvObject extends React.PureComponent {
                             paddingLeft: expanded ? '3px' : '0px'
                         }}
                     >
-                        {object_type === 'array' ? ']' : '}'}
+                        {parent_type ? object_type === 'array' ? ']' : '}' : ')'}
                     </span>
-                    {expanded ? null : this.getObjectMetaData(src)}
+                    <span
+                        class="badge bg-secondary data-type-label"
+                        {...Theme(theme, 'data-type-label')}
+                    >
+                        {internal_type}
+                    </span>
+                    {this.getCopyToClipboard()}
                 </span>
             </div>
         );
     }
 
-    renderObjectContents = (variables, props) => {
+    renderObjectContents = (src, props) => {
         const {
             depth,
             parent_type,
@@ -248,37 +277,16 @@ class RjvObject extends React.PureComponent {
         const { object_type } = this.state;
         let elements = [],
             variable;
-        let keys = Object.keys(variables || {});
-        if (this.props.sortKeys && object_type !== 'array') {
-            keys = keys.sort();
-        }
+        
+        if (src.type) {
+            variable = new JsonVariable(src.name, src.value, src.type, src.internalType);
 
-        keys.forEach(name => {
-            variable = new JsonVariable(name, variables[name]);
-
-            if (parent_type === 'array_group' && index_offset) {
-                variable.name = parseInt(variable.name) + index_offset;
-            }
-            if (!variables.hasOwnProperty(name)) {
-                return;
-            } else if (variable.type === 'object') {
-                elements.push(
-                    <JsonObject
-                        key={variable.name}
-                        depth={depth + DEPTH_INCREMENT}
-                        name={variable.name}
-                        src={variable.value}
-                        namespace={namespace.concat(variable.name)}
-                        parent_type={object_type}
-                        {...props}
-                    />
-                );
-            } else if (variable.type === 'array') {
+            if (src.type.endsWith(']')) {
                 let ObjectComponent = JsonObject;
 
                 if (
                     groupArraysAfterLength &&
-                    variable.value.length > groupArraysAfterLength
+                    variable.value.length >= groupArraysAfterLength
                 ) {
                     ObjectComponent = ArrayGroup;
                 }
@@ -292,6 +300,71 @@ class RjvObject extends React.PureComponent {
                         namespace={namespace.concat(variable.name)}
                         type="array"
                         parent_type={object_type}
+                        internal_type={variable.internalType}
+                        {...props}
+                    />
+                )
+            } else if (!src.type.startsWith('tuple')) {
+                elements.push(
+                    <VariableEditor
+                        key={variable.name + '_' + namespace}
+                        variable={variable}
+                        singleIndent={SINGLE_INDENT}
+                        namespace={namespace}
+                        type={this.props.type}
+                        {...props}
+                    />
+                );
+            }
+            return elements
+        }
+
+        let keys = Object.keys(src || {});
+        if (this.props.sortKeys && object_type !== 'array') {
+            keys = keys.sort();
+        }
+
+        keys.forEach(name => {
+            variable = new JsonVariable(name, src[name].value, src[name].type, src[name].internalType);
+
+            if (parent_type === 'array_group' && index_offset) {
+                variable.name = parseInt(variable.name) + index_offset;
+            }
+            if (!src.hasOwnProperty(name)) {
+                return;
+            } else if (variable.type === 'object' || variable.type === 'tuple') {
+                elements.push(
+                    <JsonObject
+                        key={variable.name}
+                        depth={depth + DEPTH_INCREMENT}
+                        name={variable.name}
+                        src={variable.value}
+                        namespace={namespace.concat(variable.name)}
+                        parent_type={object_type}
+                        internal_type={variable.internalType}
+                        {...props}
+                    />
+                );
+            } else if (variable.type.endsWith(']')) {
+                let ObjectComponent = JsonObject;
+
+                if (
+                    groupArraysAfterLength &&
+                    variable.value.length >= groupArraysAfterLength
+                ) {
+                    ObjectComponent = ArrayGroup;
+                }
+
+                elements.push(
+                    <ObjectComponent
+                        key={variable.name}
+                        depth={depth + DEPTH_INCREMENT}
+                        name={variable.name}
+                        src={variable.value}
+                        namespace={namespace.concat(variable.name)}
+                        type="array"
+                        parent_type={object_type}
+                        internal_type={variable.internalType}
                         {...props}
                     />
                 );
@@ -315,10 +388,11 @@ class RjvObject extends React.PureComponent {
 
 //just store name, value and type with a variable
 class JsonVariable {
-    constructor(name, value) {
+    constructor(name, value, type, internalType) {
         this.name = name;
         this.value = value;
-        this.type = toType(value);
+        this.type = type || toType(value);
+        this.internalType = internalType;
     }
 }
 

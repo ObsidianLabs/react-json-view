@@ -3,24 +3,25 @@ import constants from './styleConstants';
 import { createStyling } from 'react-base16-styling';
 
 const colorMap = theme => ({
-    backgroundColor: theme.base00,
+    backgroundColor: 'transparent', // theme.base00,
     ellipsisColor: theme.base09,
-    braceColor: theme.base07,
+    braceColor: 'var(--color-text-muted)', // theme.base07,
     expandedIcon: theme.base0D,
     collapsedIcon: theme.base0E,
-    keyColor: theme.base07,
+    keyColor: 'var(--color-text)', // theme.base07,
     arrayKeyColor: theme.base0C,
-    objectSize: theme.base04,
+    objectSize: 'var(--color-placeholder)', // theme.base04,
     copyToClipboard: theme.base0F,
     copyToClipboardCheck: theme.base0D,
-    objectBorder: theme.base02,
+    objectBorder: 'var(--color-secondary)', // theme.base02,
     dataTypes: {
-        boolean: theme.base0E,
+        boolean: 'var(--color-success)', // theme.base0E,
         date: theme.base0D,
         float: theme.base0B,
         function: theme.base0D,
-        integer: theme.base0F,
-        string: theme.base09,
+        integer: 'var(--color-link)', // theme.base0F,
+        string: 'var(--color-warning)', // theme.base09,
+        hex: 'var(--color-info)', // theme.base09,
         nan: theme.base08,
         null: theme.base0A,
         undefined: theme.base05,
@@ -35,7 +36,7 @@ const colorMap = theme => ({
         checkIcon: theme.base0E,
         background: theme.base01,
         color: theme.base0A,
-        border: theme.base07
+        border: 'var(--color-secondary)' // theme.base07
     },
     addKeyModal: {
         background: theme.base05,
@@ -56,6 +57,7 @@ const getDefaultThemeStyling = theme => {
     return {
         'app-container': {
             fontFamily: constants.globalFontFamily,
+            fontSize: 'small',
             cursor: constants.globalCursor,
             backgroundColor: colors.backgroundColor,
             position: 'relative'
@@ -63,7 +65,7 @@ const getDefaultThemeStyling = theme => {
         ellipsis: {
             display: 'inline-block',
             color: colors.ellipsisColor,
-            fontSize: constants.ellipsisFontSize,
+            // fontSize: constants.ellipsisFontSize,
             lineHeight: constants.ellipsisLineHeight,
             cursor: constants.ellipsisCursor
         },
@@ -86,7 +88,7 @@ const getDefaultThemeStyling = theme => {
         colon: {
             display: 'inline-block',
             margin: constants.keyMargin,
-            color: colors.keyColor,
+            color: colors.braceColor,
             verticalAlign: 'top'
         },
         objectKeyVal: (component, variable_style) => {
@@ -148,13 +150,15 @@ const getDefaultThemeStyling = theme => {
         },
         'object-size': {
             color: colors.objectSize,
+            fontSize: 'smaller',
             borderRadius: constants.objectSizeBorderRadius,
             fontStyle: constants.objectSizeFontStyle,
             margin: constants.objectSizeMargin,
-            cursor: 'default'
+            // cursor: 'default'
         },
         'data-type-label': {
             fontSize: constants.dataTypeFontSize,
+            marginLeft: constants.dataTypeMarginLeft,
             marginRight: constants.dataTypeMarginRight,
             opacity: constants.datatypeOpacity
         },
@@ -189,6 +193,10 @@ const getDefaultThemeStyling = theme => {
         string: {
             display: 'inline-block',
             color: colors.dataTypes.string
+        },
+        hex: {
+            display: 'inline-block',
+            color: colors.dataTypes.hex
         },
         nan: {
             display: 'inline-block',
@@ -230,7 +238,7 @@ const getDefaultThemeStyling = theme => {
             verticalAlign: 'top'
         },
         'copy-icon-copied': {
-            color: colors.copyToClipboardCheck,
+            // color: colors.copyToClipboardCheck,
             marginLeft: constants.clipboardCheckMarginLeft
         },
         'array-group-meta-data': {

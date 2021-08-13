@@ -9,7 +9,7 @@ export default class extends React.PureComponent {
         if (displayDataTypes) {
             return (
                 <span
-                    class="data-type-label"
+                    class="badge bg-secondary data-type-label"
                     {...Theme(theme, 'data-type-label')}
                 >
                     {type_name}

@@ -3,7 +3,7 @@ export default {
     black: '#000',
     transparent: 'rgba(1, 1, 1, 0)',
 
-    globalFontFamily: 'monospace',
+    globalFontFamily: 'Hack',
     globalCursor: 'default',
 
     indentBlockWidth: '5px',
@@ -15,7 +15,7 @@ export default {
     ellipsisLineHeight: '10px',
     ellipsisCursor: 'pointer',
 
-    keyMargin: '0px 5px',
+    keyMargin: '0px 3px 0px 0px',
     keyLetterSpacing: '0.5px',
     keyFontStyle: 'none',
     keyBorderRadius: '3px',
@@ -26,7 +26,7 @@ export default {
 
     keyValPaddingTop: '3px',
     keyValPaddingBottom: '3px',
-    keyValPaddingRight: '5px',
+    keyValPaddingRight: '0px',
     keyValBorderLeft: '1px solid',
     keyValBorderHover: '2px solid',
     keyValPaddingHover: '3px 5px 3px 4px',
@@ -51,17 +51,18 @@ export default {
     undefinedBorderRadius: '3px',
 
     dataTypeFontSize: '11px',
-    dataTypeMarginRight: '4px',
+    dataTypeMarginLeft: '4px',
+    dataTypeMarginRight: '0px',
     datatypeOpacity: '0.8',
 
     objectSizeBorderRadius: '3px',
     objectSizeFontStyle: 'italic',
-    objectSizeMargin: '0px 6px 0px 0px',
+    objectSizeMargin: '0px 6px 0px 6px',
 
     clipboardCursor: 'pointer',
     clipboardCheckMarginLeft: '-12px',
 
-    metaDataPadding: '0px 0px 0px 10px',
+    metaDataPadding: '0px 0px 0px 6px',
 
     arrayGroupMetaPadding: '0px 0px 0px 4px',
 
