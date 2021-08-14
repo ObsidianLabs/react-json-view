@@ -18,6 +18,7 @@ import {
     JsonNull,
     JsonRegexp,
     JsonString,
+    JsonAddress,
     JsonBytes,
     JsonUndefined
 } from './DataTypes/DataTypes';
@@ -129,16 +130,16 @@ class VariableEditor extends React.PureComponent {
                     })}
                 >
                     {this.getValue(variable, editMode)}
+                    {enableClipboard ? (
+                        <CopyToClipboard
+                            rowHovered={this.state.hovered}
+                            hidden={editMode}
+                            src={variable.value}
+                            clickCallback={enableClipboard}
+                            {...{ theme, namespace: [...namespace, variable.name] }}
+                        />
+                    ) : null}
                 </div>
-                {enableClipboard ? (
-                    <CopyToClipboard
-                        rowHovered={this.state.hovered}
-                        hidden={editMode}
-                        src={variable.value}
-                        clickCallback={enableClipboard}
-                        {...{ theme, namespace: [...namespace, variable.name] }}
-                    />
-                ) : null}
                 {onEdit !== false && editMode == false
                     ? this.getEditIcon()
                     : null}
@@ -224,8 +225,10 @@ class VariableEditor extends React.PureComponent {
             return <JsonBoolean value={variable.value} {...props} />
         } else if (type.startsWith('int') || type.startsWith('uint')) {
             return <JsonInteger value={variable.value} {...props} type={type} />;
-        } else if (type === 'string' || type === 'address' || type === 'FixedHash<20>') {
+        } else if (type === 'string') {
             return <JsonString value={variable.value} {...props} type={type} />;
+        } else if (type === 'address' || type === 'FixedHash<20>') {
+            return <JsonAddress value={variable.value} {...props} type={type} />;
         } else if (type === 'byte' || type.startsWith('bytes')) {
             return <JsonBytes value={variable.value} {...props} type={type} />;
         }

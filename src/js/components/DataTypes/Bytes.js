@@ -65,6 +65,10 @@ export default class extends React.PureComponent {
             }
         }
 
+        if (format === 'utf8') {
+            value = `"${value}"`
+        }
+
         return (
             <div {...Theme(theme, format === 'utf8' ? 'string' : 'hex')}>
                 <span
@@ -72,7 +76,7 @@ export default class extends React.PureComponent {
                     {...style}
                     onClick={this.toggleCollapsed}
                 >
-                    "{value}"
+                    {value}
                 </span>
                 <span
                     class="badge bg-secondary cursor-pointer data-type-label"

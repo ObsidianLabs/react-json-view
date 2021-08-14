@@ -33,7 +33,7 @@ export default {
 
     pushedContentMarginLeft: '6px',
 
-    variableValuePaddingRight: '6px',
+    variableValuePaddingRight: '0px',
 
     nullFontSize: '11px',
     nullFontWeight: 'bold',
@@ -50,7 +50,7 @@ export default {
     undefinedPadding: '1px 2px',
     undefinedBorderRadius: '3px',
 
-    dataTypeFontSize: '11px',
+    // dataTypeFontSize: '11px',
     dataTypeMarginLeft: '4px',
     dataTypeMarginRight: '0px',
     datatypeOpacity: '0.8',
@@ -62,7 +62,7 @@ export default {
     clipboardCursor: 'pointer',
     clipboardCheckMarginLeft: '-12px',
 
-    metaDataPadding: '0px 0px 0px 6px',
+    metaDataPadding: '0px',
 
     arrayGroupMetaPadding: '0px 0px 0px 4px',
 

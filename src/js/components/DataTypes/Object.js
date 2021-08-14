@@ -255,7 +255,7 @@ class RjvObject extends React.PureComponent {
                         {parent_type ? object_type === 'array' ? ']' : '}' : ')'}
                     </span>
                     <span
-                        class="badge bg-secondary data-type-label"
+                        class="badge bg-secondary text-muted data-type-label"
                         {...Theme(theme, 'data-type-label')}
                     >
                         {internal_type}

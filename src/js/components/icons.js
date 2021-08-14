@@ -141,7 +141,7 @@ export class Clippy extends React.PureComponent {
 
         return (
             <span {...rest}>
-                <i className='fas fa-copy text-muted' />
+                <i className='fas fa-paste text-muted' />
             </span>
         );
     }

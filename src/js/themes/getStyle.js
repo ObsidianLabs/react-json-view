@@ -19,9 +19,9 @@ const colorMap = theme => ({
         date: theme.base0D,
         float: theme.base0B,
         function: theme.base0D,
-        integer: 'var(--color-link)', // theme.base0F,
+        integer: 'var(--color-info)', // theme.base0F,
         string: 'var(--color-warning)', // theme.base09,
-        hex: 'var(--color-info)', // theme.base09,
+        hex: 'var(--color-link)', // theme.base09,
         nan: theme.base08,
         null: theme.base0A,
         undefined: theme.base05,
@@ -156,14 +156,22 @@ const getDefaultThemeStyling = theme => {
             margin: constants.objectSizeMargin,
             // cursor: 'default'
         },
+        'data-label': {
+            // fontSize: constants.dataTypeFontSize,
+            marginRight: constants.dataTypeMarginLeft,
+            verticalAlign: 'text-top',
+            marginTop: 1,
+        },
         'data-type-label': {
-            fontSize: constants.dataTypeFontSize,
+            // fontSize: constants.dataTypeFontSize,
+            verticalAlign: 'text-top',
+            marginTop: 1,
             marginLeft: constants.dataTypeMarginLeft,
             marginRight: constants.dataTypeMarginRight,
             opacity: constants.datatypeOpacity
         },
         boolean: {
-            display: 'inline-block',
+            display: 'inline',
             color: colors.dataTypes.boolean
         },
         date: {
@@ -187,15 +195,15 @@ const getDefaultThemeStyling = theme => {
             fontStyle: 'italic'
         },
         integer: {
-            display: 'inline-block',
+            display: 'inline',
             color: colors.dataTypes.integer
         },
         string: {
-            display: 'inline-block',
+            display: 'inline',
             color: colors.dataTypes.string
         },
         hex: {
-            display: 'inline-block',
+            display: 'inline',
             color: colors.dataTypes.hex
         },
         nan: {
@@ -229,7 +237,8 @@ const getDefaultThemeStyling = theme => {
             color: colors.dataTypes.regexp
         },
         'copy-to-clipboard': {
-            cursor: constants.clipboardCursor
+            cursor: constants.clipboardCursor,
+            marginLeft: '6px',
         },
         'copy-icon': {
             color: colors.copyToClipboard,
