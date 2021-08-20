@@ -60,7 +60,8 @@ const getDefaultThemeStyling = theme => {
             fontSize: 'small',
             cursor: constants.globalCursor,
             backgroundColor: colors.backgroundColor,
-            position: 'relative'
+            position: 'relative',
+            lineHeight: '1.1rem'
         },
         ellipsis: {
             display: 'inline-block',
